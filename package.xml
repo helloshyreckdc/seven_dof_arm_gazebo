@@ -45,6 +45,8 @@
   <build_depend>gazebo_ros</build_depend>
   <build_depend>gazebo_ros_control</build_depend>
   <build_depend>mastering_ros_robot_description_pkg</build_depend>
+  <build_depend>moveit_ros_planning_interface</build_depend>
+  <run_depend>moveit_ros_planning_interface</run_depend>
   <run_depend>gazebo_msgs</run_depend>
   <run_depend>gazebo_plugins</run_depend>
   <run_depend>gazebo_ros</run_depend>

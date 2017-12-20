@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
   gazebo_ros_control
   mastering_ros_robot_description_pkg
+  moveit_ros_planning_interface
 )
 
 ## System dependencies are found with CMake's conventions
@@ -163,4 +164,5 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-
+add_executable(move_group_interface src/move_group_interface_tutorial.cpp)
+target_link_libraries(move_group_interface ${catkin_LIBRARIES})
