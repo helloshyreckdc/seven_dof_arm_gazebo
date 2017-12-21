@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 
 
   /* This sleep is ONLY to allow Rviz to come up */
-  sleep(20.0);
+  sleep(10.0);
   
   // BEGIN_TUTORIAL
   // 
@@ -144,66 +144,74 @@ int main(int argc, char **argv)
   // pose target we set above.
   //
   // First get the current set of joint values for the group.
-//  std::vector<double> group_variable_values;
-//  group.getCurrentState()->copyJointGroupPositions(group.getCurrentState()->getRobotModel()->getJointModelGroup(group.getName()), group_variable_values);
-//  
-//  // Now, let's modify one of the joints, plan to the new joint
-//  // space goal and visualize the plan.
-//  group_variable_values[0] = -1.0;  
-//  group.setJointValueTarget(group_variable_values);
-//  success = group.plan(my_plan);
-//
-//  ROS_INFO("Visualizing plan 2 (joint space goal) %s",success?"":"FAILED");
-//  /* Sleep to give Rviz time to visualize the plan. */
-//  sleep(5.0);
-//
-//  // Planning with Path Constraints
-//  // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//  //
-//  // Path constraints can easily be specified for a link on the robot.
-//  // Let's specify a path constraint and a pose goal for our group.
-//  // First define the path constraint.
-//  moveit_msgs::OrientationConstraint ocm;  
-//  ocm.link_name = "grasping_frame";  
-//  ocm.header.frame_id = "base_link";
-//  ocm.orientation.w = 1.0;
-//  ocm.absolute_x_axis_tolerance = 0.1;
-//  ocm.absolute_y_axis_tolerance = 0.1;
-//  ocm.absolute_z_axis_tolerance = 0.1;
-//  ocm.weight = 1.0;
-//  
-//  // Now, set it as the path constraint for the group.
-//  moveit_msgs::Constraints test_constraints;
-//  test_constraints.orientation_constraints.push_back(ocm);  
-//  group.setPathConstraints(test_constraints);
-//
-//  // We will reuse the old goal that we had and plan to it.
-//  // Note that this will only work if the current state already 
-//  // satisfies the path constraints. So, we need to set the start
-//  // state to a new pose. 
-//  robot_state::RobotState start_state(*group.getCurrentState());
-//  geometry_msgs::Pose start_pose2;
-//  start_pose2.orientation.w = 1.0;
-//  start_pose2.position.x = 0.55;
-//  start_pose2.position.y = -0.05;
-//  start_pose2.position.z = 0.8;
-//  const robot_state::JointModelGroup *joint_model_group =
-//                  start_state.getJointModelGroup(group.getName());
-//  start_state.setFromIK(joint_model_group, start_pose2);
-//  group.setStartState(start_state);
-//  
-//  // Now we will plan to the earlier pose target from the new 
-//  // start state that we have just created.
-//  group.setPoseTarget(target_pose1);
-//  success = group.plan(my_plan);
-//
-//  ROS_INFO("Visualizing plan 3 (constraints) %s",success?"":"FAILED");
-//  /* Sleep to give Rviz time to visualize the plan. */
-//  sleep(10.0);
-//
-//  // When done with the path constraint be sure to clear it.
-//  group.clearPathConstraints();
-//
+  std::vector<double> group_variable_values;
+  group.getCurrentState()->copyJointGroupPositions(group.getCurrentState()->getRobotModel()->getJointModelGroup(group.getName()), group_variable_values);
+  
+  // Now, let's modify one of the joints, plan to the new joint
+  // space goal and visualize the plan.
+  group_variable_values[0] = -1.0;  
+  group.setJointValueTarget(group_variable_values);
+  success = group.plan(my_plan);
+
+  ROS_INFO("Visualizing plan 2 (joint space goal) %s",success?"":"FAILED");
+  /* Sleep to give Rviz time to visualize the plan. */
+  sleep(5.0);
+
+//  group.move();
+
+  // Planning with Path Constraints
+  // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  //
+  // Path constraints can easily be specified for a link on the robot.
+  // Let's specify a path constraint and a pose goal for our group.
+  // First define the path constraint.
+  moveit_msgs::OrientationConstraint ocm;  
+  ocm.link_name = "grasping_frame";  
+  ocm.header.frame_id = "base_link";
+  ocm.orientation.x = 0.0;
+  ocm.orientation.y = -0.687;
+  ocm.orientation.z = 0.0;
+  ocm.orientation.w = 0.726;
+  ocm.absolute_x_axis_tolerance = 0.1;
+  ocm.absolute_y_axis_tolerance = 0.1;
+  ocm.absolute_z_axis_tolerance = 0.1;
+  ocm.weight = 0.5;
+  
+  // Now, set it as the path constraint for the group.
+  moveit_msgs::Constraints test_constraints;
+  test_constraints.orientation_constraints.push_back(ocm);  
+  group.setPathConstraints(test_constraints);
+
+  // We will reuse the old goal that we had and plan to it.
+  // Note that this will only work if the current state already 
+  // satisfies the path constraints. So, we need to set the start
+  // state to a new pose. 
+  robot_state::RobotState start_state(*group.getCurrentState());
+  geometry_msgs::Pose start_pose2;
+  start_pose2.orientation.x = 0.0;
+  start_pose2.orientation.y = -0.687;
+  start_pose2.orientation.z = 0.0;
+  start_pose2.orientation.w = 0.726;
+  start_pose2.position.x = -0.059;
+  start_pose2.position.y = -0.273;
+  start_pose2.position.z = 0.5;
+  const robot_state::JointModelGroup *joint_model_group =
+                  start_state.getJointModelGroup(group.getName());
+  start_state.setFromIK(joint_model_group, start_pose2);
+  group.setStartState(start_state);
+  
+  // Now we will plan to the earlier pose target from the new 
+  // start state that we have just created.
+  group.setPoseTarget(target_pose1);
+  success = group.plan(my_plan);
+
+  ROS_INFO("Visualizing plan 3 (constraints) %s",success?"":"FAILED");
+  /* Sleep to give Rviz time to visualize the plan. */
+  sleep(10.0);
+
+  // When done with the path constraint be sure to clear it.
+  group.clearPathConstraints();
+
 //  // Cartesian Paths
 //  // ^^^^^^^^^^^^^^^
 //  // You can plan a cartesian path directly by specifying a list of waypoints 
